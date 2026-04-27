@@ -1,163 +1,161 @@
 ---
 name: gap
-description: Analyze the gap between source-of-truth material, current implementation, and desired behavior. Use when the user wants requirements intake, source normalization, missing-condition discovery, or pre-planning analysis.
+description: source-of-truth 자료, 현재 구현, 원하는 동작 사이의 차이를 분석합니다. 요구사항 수집, 자료 정규화, 누락 조건 탐색, 사전 계획 분석이 필요할 때 사용합니다.
 ---
 
 # gap
 
-## Purpose
+## 목적
 
-Turn scattered source material into a concrete gap report.
+흩어진 원천 자료를 구체적인 갭 분석 보고서로 바꿉니다.
 
-Use this skill when the user wants to understand what is missing, ambiguous, conflicting, risky, or not yet implemented before planning or coding.
+계획이나 구현을 시작하기 전에 무엇이 빠졌는지, 모호한지, 충돌하는지, 위험한지, 아직 구현되지 않았는지 파악해야 할 때 이 스킬을 사용합니다.
 
-## Operating mode
+## 동작 방식
 
-Do not implement code in this skill unless the user explicitly overrides the workflow.
+사용자가 명시적으로 워크플로우를 건너뛰라고 하지 않는 한 이 스킬에서는 코드를 구현하지 않습니다.
 
-Focus on:
+다음에 집중합니다.
 
-1. source intake
-2. source normalization
-3. deduplication
-4. current-state inspection
-5. gap analysis
-6. clear next-step recommendations
+1. 자료 수집
+2. 자료 정규화
+3. 중복 제거
+4. 현재 상태 확인
+5. 갭 분석
+6. 명확한 다음 단계 추천
 
-## Input sources
+## 입력 자료
 
-Ask the user for source-of-truth material if it is not already available.
+source-of-truth 자료가 아직 없다면 사용자에게 요청합니다.
 
-Accepted source types include:
+허용되는 자료 유형은 다음과 같습니다.
 
-- issue tracker ticket
-- knowledge-base page
+- 이슈 트래커 티켓
+- 지식베이스 문서
 - PRD
-- design document
-- user-written brief
-- screenshot
-- code path
-- pull request
-- existing implementation reference
-- plain text notes
+- 디자인 문서
+- 사용자가 작성한 브리프
+- 스크린샷
+- 코드 경로
+- 풀 리퀘스트
+- 기존 구현 참고 자료
+- 일반 텍스트 메모
 
-Do not require a specific tool. Treat all external systems as generic source providers.
+특정 도구 사용을 강제하지 않습니다. 모든 외부 시스템은 범용 자료 제공처로 취급합니다.
 
-## Artifact directory
+## 산출물 디렉터리
 
-Use the current git branch name when possible.
+가능하면 현재 git 브랜치 이름을 사용합니다.
 
-Save artifacts under:
+산출물은 다음 경로 아래에 저장합니다.
 
 ```text
 .gap/{branch_name}/
 ```
 
-If the branch name is unavailable, ask for a short work id or infer a safe slug from the task title.
+브랜치 이름을 알 수 없다면 짧은 작업 ID를 사용자에게 묻거나 작업 제목에서 안전한 slug를 추론합니다.
 
-## Required output files
+## 필수 출력 파일
 
-Create or update:
+다음 파일을 생성하거나 갱신합니다.
 
 ```text
 .gap/{branch_name}/normalized/source-packet.md
 .gap/{branch_name}/analysis/gap-report.md
 ```
 
-Optionally create:
+필요하면 다음 디렉터리도 생성합니다.
 
 ```text
 .gap/{branch_name}/sources/
 ```
 
-Use source snapshots or summaries only when helpful for traceability.
+추적 가능성에 도움이 될 때만 자료 스냅샷이나 요약을 저장합니다.
 
-## Process
+## 진행 절차
 
-### 1. Collect source references
+### 1. 자료 참조 수집
 
-If no source material exists, ask for one or more of the following:
+자료가 없다면 다음 중 하나 이상을 요청합니다.
 
 ```text
-- issue tracker ticket
-- knowledge-base page
+- 이슈 트래커 티켓
+- 지식베이스 문서
 - PRD
-- design document
-- user-written brief
-- relevant code path
+- 디자인 문서
+- 사용자가 작성한 브리프
+- 관련 코드 경로
 ```
 
-### 2. Normalize into Source Packet
+### 2. Source Packet으로 정규화
 
-Transform all source material into the source packet template.
+모든 자료를 source packet 템플릿으로 변환합니다.
 
-Capture:
+다음을 기록합니다.
 
-- goal
-- problem
-- confirmed requirements
-- acceptance criteria
-- constraints
-- non-goals
-- decisions
-- comments or discussion points
-- open questions
-- related sources
+- 목표
+- 문제
+- 확인된 요구사항
+- 인수 조건
+- 제약
+- 논의 범위에서 제외할 것
+- 결정 사항
+- 코멘트 또는 논의 지점
+- 열린 질문
+- 관련 자료
 
-### 3. Deduplicate
+### 3. 중복 제거
 
-When two sources repeat the same content, keep one canonical statement and record that it was duplicated.
+두 자료가 같은 내용을 반복하면 하나의 대표 문장만 남기고 중복되었다는 사실을 기록합니다.
 
-When two sources conflict, do not silently merge them. Mark the conflict explicitly.
+두 자료가 충돌하면 조용히 합치지 말고 충돌을 명시합니다.
 
-### 4. Inspect current implementation
+### 4. 현재 구현 확인
 
-If code access is available, inspect relevant files before producing implementation gaps.
+코드에 접근할 수 있다면 구현 갭을 작성하기 전에 관련 파일을 확인합니다.
 
-Look for:
+다음을 살펴봅니다.
 
-- existing behavior
-- related components
-- existing data flow
-- validation rules
-- tests
-- feature flags
-- error handling
-- naming patterns
+- 기존 동작
+- 관련 컴포넌트
+- 기존 데이터 흐름
+- 검증 규칙
+- 테스트
+- feature flag
+- 에러 처리
+- 네이밍 패턴
 
-### 5. Produce gap report
+### 5. 갭 분석 보고서 작성
 
-Use `templates/gap-report.md`.
+`templates/gap-report.md`를 사용합니다.
 
-Classify findings as:
+발견 사항은 다음으로 분류합니다.
 
-- confirmed requirement
-- missing requirement
-- ambiguous requirement
-- conflicting information
-- implementation gap
-- UX/UI gap
-- API/data gap
-- edge case
-- risk
-- required clarification
+- 확인된 요구사항
+- 누락된 요구사항
+- 모호한 요구사항
+- 충돌하는 정보
+- 구현 갭
+- UX/UI 갭
+- API/데이터 갭
+- 엣지 케이스
+- 위험
+- 확인이 필요한 질문
 
-## Completion criteria
+## 완료 기준
 
-This skill is complete when:
+이 스킬은 다음 조건을 만족하면 완료됩니다.
 
-- source material has been normalized
-- duplicate and conflicting information has been handled
-- current implementation has been inspected where possible
-- a gap report exists
-- next steps are clear enough for `/tigap:gaplan`
+- 자료가 정규화됨
+- 중복과 충돌 정보가 처리됨
+- 가능한 범위에서 현재 구현을 확인함
+- 갭 분석 보고서가 존재함
+- `/tigap:gaplan`으로 넘기기에 충분히 다음 단계가 명확함
 
-## Handoff
+## 인계
 
-End by recommending:
+갭 분석 보고서가 준비된 뒤에만 다음 명령을 추천하며 마무리합니다.
 
 ```text
 /tigap:gaplan
 ```
-
-only after the gap report is ready.

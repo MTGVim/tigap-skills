@@ -1,83 +1,83 @@
 ---
 name: go
-description: Execute a prepared task list in small validated steps. Use after planning when the user wants implementation progress without losing scope.
+description: 준비된 작업 목록을 작고 검증된 단계로 실행합니다. 계획 후 범위를 잃지 않고 구현을 진행하고 싶을 때 사용합니다.
 ---
 
 # go
 
-## Purpose
+## 목적
 
-Execute `.gap/{branch_name}/tasks.md` one task at a time.
+`.gap/{branch_name}/tasks.md`의 작업을 한 번에 하나씩 실행합니다.
 
-Use this skill when the user wants implementation to begin after gap analysis and planning.
+갭 분석과 계획 수립이 끝난 뒤 사용자가 구현을 시작하고 싶을 때 이 스킬을 사용합니다.
 
-## Operating mode
+## 동작 방식
 
-Small-step execution only.
+작은 단계로만 실행합니다.
 
-Do not jump ahead. Do not rewrite the plan unless a blocker or contradiction is found.
+앞질러 진행하지 않습니다. blocker나 모순을 발견하지 않는 한 계획을 다시 쓰지 않습니다.
 
-## Required inputs
+## 필수 입력
 
-Read:
+다음 파일을 읽습니다.
 
 ```text
 .gap/{branch_name}/plan/implementation-plan.md
 .gap/{branch_name}/tasks.md
 ```
 
-If missing, ask the user to run:
+파일이 없다면 사용자에게 다음 명령을 실행하라고 요청합니다.
 
 ```text
 /tigap:gaplan
 ```
 
-or produce a minimal plan first.
+또는 먼저 최소한의 계획을 작성합니다.
 
-## Required output files
+## 필수 출력 파일
 
-Update:
+다음 파일을 갱신합니다.
 
 ```text
 .gap/{branch_name}/tasks.md
 .gap/{branch_name}/execution-log.md
 ```
 
-Optionally update:
+필요하면 다음 파일도 갱신합니다.
 
 ```text
 .gap/{branch_name}/review-checklist.md
 ```
 
-## Process
+## 진행 절차
 
-### 1. Select next task
+### 1. 다음 작업 선택
 
-Choose the first unchecked task in `Ready` unless the user specifies another task.
+사용자가 다른 작업을 지정하지 않았다면 `Ready`에 있는 첫 번째 미완료 작업을 선택합니다.
 
-Move it to `In Progress` or mark it clearly as active.
+해당 작업을 `In Progress`로 옮기거나 현재 진행 중임을 명확히 표시합니다.
 
-### 2. Inspect before editing
+### 2. 수정 전 확인
 
-Before changing code, inspect:
+코드를 바꾸기 전에 다음을 확인합니다.
 
-- files listed in the plan
-- adjacent implementations
-- tests
-- existing patterns
-- relevant imports and exports
+- 계획에 적힌 파일
+- 인접한 구현
+- 테스트
+- 기존 패턴
+- 관련 import와 export
 
-### 3. Implement narrowly
+### 3. 좁게 구현
 
-Make only the changes required for the active task.
+현재 작업에 필요한 변경만 수행합니다.
 
-Avoid opportunistic refactors unless they are required for correctness.
+정확성을 위해 반드시 필요한 경우가 아니라면 기회주의적 리팩터링을 피합니다.
 
-### 4. Validate
+### 4. 검증
 
-Run the task-specific validation if available.
+가능하면 작업별 검증을 실행합니다.
 
-Prefer existing project commands:
+기존 프로젝트 명령을 우선합니다.
 
 - typecheck
 - lint
@@ -85,34 +85,34 @@ Prefer existing project commands:
 - integration tests
 - build
 
-If validation cannot be run, record why.
+검증을 실행할 수 없다면 이유를 기록합니다.
 
-### 5. Update artifacts
+### 5. 산출물 갱신
 
-Update `tasks.md`:
+`tasks.md`를 갱신합니다.
 
-- move completed task to `Done`
-- keep incomplete task in `In Progress` or `Blocked`
-- add newly discovered tasks under `Ready` or `Blocked`
+- 완료된 작업은 `Done`으로 이동
+- 끝나지 않은 작업은 `In Progress` 또는 `Blocked`에 유지
+- 새로 발견한 작업은 `Ready` 또는 `Blocked`에 추가
 
-Append to `execution-log.md`:
+`execution-log.md`에 다음을 추가합니다.
 
-- task name
-- files changed
-- validation run
-- result
-- risks or follow-ups
+- 작업 이름
+- 변경한 파일
+- 실행한 검증
+- 결과
+- 위험 또는 후속 작업
 
-## Stop conditions
+## 중단 조건
 
-Stop and report if:
+다음 상황에서는 멈추고 보고합니다.
 
-- requirements conflict with implementation reality
-- required source material is missing
-- validation fails and the fix is not obvious
-- the task requires a scope increase
-- the implementation would affect unrelated areas
+- 요구사항이 실제 구현과 충돌함
+- 필요한 원천 자료가 없음
+- 검증이 실패했고 수정 방법이 명확하지 않음
+- 작업 범위를 늘려야 함
+- 구현이 관련 없는 영역에 영향을 줌
 
-## Completion criteria
+## 완료 기준
 
-This skill is complete when one task has been implemented and validated, or when a blocker has been clearly documented.
+이 스킬은 작업 하나가 구현되고 검증되었거나 blocker가 명확히 문서화되면 완료됩니다.

@@ -1,142 +1,140 @@
 ---
 name: gaplan
-description: Convert a gap report into an implementation plan, task breakdown, validation strategy, and ordered task list. Use after gap analysis and before coding.
+description: 갭 분석 보고서를 구현 계획, 작업 분해, 검증 전략, 정렬된 작업 목록으로 바꿉니다. 갭 분석 후 코딩 전에 사용합니다.
 ---
 
 # gaplan
 
-## Purpose
+## 목적
 
-Turn `.gap/{branch_name}/analysis/gap-report.md` into an executable plan.
+`.gap/{branch_name}/analysis/gap-report.md`를 실행 가능한 계획으로 바꿉니다.
 
-Use this skill when the user wants planning, task decomposition, sequencing, validation design, or plan-mode style implementation preparation.
+사용자가 계획 수립, 작업 분해, 순서 정하기, 검증 설계, plan mode 스타일의 구현 준비를 원할 때 이 스킬을 사용합니다.
 
-## Operating mode
+## 동작 방식
 
-Prefer planning over implementation.
+구현보다 계획을 우선합니다.
 
-Do not modify production code in this skill unless the user explicitly asks for implementation in the same step.
+사용자가 같은 단계에서 구현까지 명시적으로 요청하지 않는 한 이 스킬에서는 프로덕션 코드를 수정하지 않습니다.
 
-## Required inputs
+## 필수 입력
 
-Read:
+다음 파일을 읽습니다.
 
 ```text
 .gap/{branch_name}/normalized/source-packet.md
 .gap/{branch_name}/analysis/gap-report.md
 ```
 
-If these files do not exist, ask the user to run:
+파일이 없다면 사용자에게 다음 명령을 실행하라고 요청합니다.
 
 ```text
 /tigap:gap
 ```
 
-or perform a minimal source intake first.
+또는 먼저 최소한의 자료 수집을 수행합니다.
 
-## Required output files
+## 필수 출력 파일
 
-Create or update:
+다음 파일을 생성하거나 갱신합니다.
 
 ```text
 .gap/{branch_name}/plan/implementation-plan.md
 .gap/{branch_name}/tasks.md
 ```
 
-Optionally create:
+필요하면 다음 파일도 생성합니다.
 
 ```text
 .gap/{branch_name}/review-checklist.md
 ```
 
-## Planning principles
+## 계획 원칙
 
-1. Keep tasks small.
-2. Prefer inspect-before-edit.
-3. Identify files likely to change before implementation.
-4. Define validation per task.
-5. Separate assumptions from confirmed requirements.
-6. Mark blockers instead of guessing.
-7. Preserve existing project patterns unless there is a clear reason not to.
+1. 작업을 작게 유지합니다.
+2. 수정 전에 먼저 확인합니다.
+3. 구현 전에 변경 가능성이 있는 파일을 식별합니다.
+4. 작업마다 검증 방법을 정의합니다.
+5. 가정과 확인된 요구사항을 분리합니다.
+6. 추측하지 말고 blocker를 표시합니다.
+7. 명확한 이유가 없다면 기존 프로젝트 패턴을 유지합니다.
 
-## Process
+## 진행 절차
 
-### 1. Read gap artifacts
+### 1. 갭 산출물 읽기
 
-Load the source packet and gap report.
+source packet과 갭 분석 보고서를 읽습니다.
 
-Extract:
+다음을 추출합니다.
 
-- goal
-- scope
-- non-goals
-- assumptions
-- risks
-- required clarifications
-- implementation gaps
-- validation needs
+- 목표
+- 범위
+- 논의 범위에서 제외할 것
+- 가정
+- 위험
+- 확인이 필요한 질문
+- 구현 갭
+- 검증 필요 사항
 
-### 2. Inspect code shape
+### 2. 코드 구조 확인
 
-If a repository is available, inspect relevant directories and nearby patterns.
+저장소를 사용할 수 있다면 관련 디렉터리와 주변 패턴을 확인합니다.
 
-Look for:
+다음을 살펴봅니다.
 
-- architecture boundaries
-- component ownership
-- data fetching flow
-- state management
-- validation layers
-- test conventions
-- naming conventions
-- feature flag patterns
+- 아키텍처 경계
+- 컴포넌트 소유 범위
+- 데이터 가져오기 흐름
+- 상태 관리
+- 검증 계층
+- 테스트 관례
+- 네이밍 관례
+- feature flag 패턴
 
-### 3. Build implementation plan
+### 3. 구현 계획 작성
 
-Use `templates/implementation-plan.md`.
+`templates/implementation-plan.md`를 사용합니다.
 
-For each task, include:
+각 작업에는 다음을 포함합니다.
 
-- objective
-- files to inspect
-- files likely to change
-- implementation notes
-- validation
-- risk
+- 목적
+- 확인할 파일
+- 변경 가능성이 있는 파일
+- 구현 메모
+- 검증 방법
+- 위험
 
-### 4. Build task list
+### 4. 작업 목록 작성
 
-Use `templates/tasks.md`.
+`templates/tasks.md`를 사용합니다.
 
-Tasks must be executable one at a time.
+작업은 하나씩 실행할 수 있어야 합니다.
 
-A good task is small enough that `/tigap:go` can complete it without losing scope.
+좋은 작업은 `/tigap:go`가 범위를 잃지 않고 완료할 수 있을 만큼 작습니다.
 
-### 5. Review readiness
+### 5. 준비 상태 검토
 
-Before finishing, check:
+마무리하기 전에 다음을 확인합니다.
 
-- Does every requirement map to a task or explicit non-goal?
-- Does every high-risk area have validation?
-- Are blockers clearly marked?
-- Is the first task safe and small?
+- 모든 요구사항이 작업 또는 명시적 non-goal에 매핑되었는가?
+- 위험이 큰 영역마다 검증 방법이 있는가?
+- blocker가 명확히 표시되었는가?
+- 첫 작업이 안전하고 작은가?
 
-## Completion criteria
+## 완료 기준
 
-This skill is complete when:
+이 스킬은 다음 조건을 만족하면 완료됩니다.
 
-- implementation plan exists
-- task list exists
-- tasks are ordered
-- validation is attached to each meaningful task
-- `/tigap:go` can begin without broad replanning
+- 구현 계획이 존재함
+- 작업 목록이 존재함
+- 작업 순서가 정해짐
+- 의미 있는 각 작업에 검증 방법이 붙어 있음
+- 큰 재계획 없이 `/tigap:go`를 시작할 수 있음
 
-## Handoff
+## 인계
 
-End by recommending:
+계획이 준비되면 다음 명령을 추천하며 마무리합니다.
 
 ```text
 /tigap:go
 ```
-
-when the plan is ready.
